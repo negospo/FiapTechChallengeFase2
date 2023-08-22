@@ -1,6 +1,6 @@
 ﻿namespace Domain.Enums
 {
-    public enum StatusPagamento
+    public enum PagamentoStatus
     {
         Aprovado = 1,
         Recusado = 2,

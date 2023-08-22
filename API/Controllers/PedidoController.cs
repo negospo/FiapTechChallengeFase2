@@ -47,7 +47,7 @@ namespace API.Controllers
         [Route("order")]
         [CustonValidateModel]
         [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 422)]
-        public ActionResult<bool> CreateOrder(Application.DTOs.Imput.Pedido pedido)
+        public ActionResult<Application.DTOs.Output.PedidoIdentificador> CreateOrder(Application.DTOs.Imput.Pedido pedido)
         {
             try
             {
@@ -77,6 +77,27 @@ namespace API.Controllers
             try
             {
                 return _pedidoUseCase.UpdateOrderStatus(id, status.Status);
+            }
+            catch (Application.CustomExceptions.NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Retorna o status de pagamento de um pedido
+        /// </summary>
+        /// <param name="pedidoId">Id do pedido</param>
+        /// <response code="404" >Pedido não encontrado</response>  
+        [HttpGet]
+        [Route("GetPaymentStatus")]
+        [ProducesResponseType(typeof(Application.DTOs.Output.PedidoPagamento), 200)]
+        public ActionResult<Application.DTOs.Output.PedidoPagamento> GetPaymentStatus(int pedidoId)
+        {
+            try
+            {
+                return Ok(_pedidoUseCase.GetPaymentStatus(pedidoId));
             }
             catch (Application.CustomExceptions.NotFoundException ex)
             {

@@ -1,3 +1,4 @@
+using Infrastructure.Payment.MercadoPago;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -34,7 +35,7 @@ namespace API
             builder.Services.AddTransient<Application.Interfaces.UseCases.IPedidoUseCase, Application.Implementations.PedidoUseCase>();
             builder.Services.AddTransient<Application.Interfaces.Repositories.IPedidoRepository, Infrastructure.Persistence.Repositories.PedidoRepository>();
 
-            builder.Services.AddTransient<Application.Interfaces.UseCases.IPaymentUseCase, Infrastructure.Payment.MercadoPagoUseCase>();
+            builder.Services.AddTransient<Application.Interfaces.UseCases.IPaymentUseCase, MercadoPagoUseCase>();
 
 
             ConfigSwagger(builder);

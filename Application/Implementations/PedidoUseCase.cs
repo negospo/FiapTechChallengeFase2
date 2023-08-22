@@ -29,6 +29,15 @@ namespace Application.Implementations
             return result;
         }
 
+        public Application.DTOs.Output.PedidoPagamento GetPaymentStatus(int pedidoId)
+        {
+            var result =  this._pedidoRepository.GetPaymentStatus(pedidoId);
+            if(result == null)
+                throw new CustomExceptions.NotFoundException($"Pedido não encontrado");
+
+            return result;
+        }
+
         public IEnumerable<DTOs.Output.Pedido> List()
         {
             return this._pedidoRepository.List();
@@ -39,7 +48,7 @@ namespace Application.Implementations
             return this._pedidoRepository.ListByStatus((Domain.Enums.PedidoStatus)status);
         }
 
-        public bool Order(DTOs.Imput.Pedido pedido)
+        public DTOs.Output.PedidoIdentificador Order(DTOs.Imput.Pedido pedido)
         {
             if (pedido.ClienteId.HasValue && pedido.ClienteId.Value > 0)
             {
@@ -89,14 +98,28 @@ namespace Application.Implementations
             });
             //Atualiza o codigo da transação
             pedidoEntity.Pagamento.AtualizaCodigoTransacao(paymentResult.CodigoTransacao);
+            //Atualiza status de pagamento
+            pedidoEntity.Pagamento.AtualizaStatusPagamento(paymentResult.Status);
+
             //Salva no repositorio
-            return _pedidoRepository.Order(pedidoEntity);
+            var identifier = _pedidoRepository.Order(pedidoEntity);
+
+            return new DTOs.Output.PedidoIdentificador { Id = identifier }; 
         }
 
-        public bool UpdateOrderStatus(int id, PedidoStatus status)
+        public bool UpdateOrderStatus(int pedidoId, PedidoStatus status)
+        {
+            var result = _pedidoRepository.UpdateOrderStatus(pedidoId, (Domain.Enums.PedidoStatus)status);
+            if(!result)
+                throw new CustomExceptions.NotFoundException("Pedido não encontrado");
+
+            return result;
+        }
+
+        public bool UpdatePaymentStatus(int id, PagamentoStatus status)
         {
             var result = _pedidoRepository.UpdateOrderStatus(id, (Domain.Enums.PedidoStatus)status);
-            if(!result)
+            if (!result)
                 throw new CustomExceptions.NotFoundException("Pedido não encontrado");
 
             return result;

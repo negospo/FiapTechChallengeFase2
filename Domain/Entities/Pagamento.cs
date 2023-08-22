@@ -18,13 +18,17 @@
 
         public decimal Valor { get; set; }
 
-        public Enums.StatusPagamento? StatusPagamentoId { get; set; }
+        public Enums.PagamentoStatus? PagamentoStatus { get; set; }
 
         public string CodigoTransacao { get; set; }
 
         public void AtualizaCodigoTransacao(string codigo)
         { 
             this.CodigoTransacao = codigo;
+        }
+        public void AtualizaStatusPagamento(Enums.PagamentoStatus status)
+        {
+            this.PagamentoStatus = status;
         }
 
     }

@@ -24,11 +24,17 @@ namespace Infrastructure.Persistence.Repositories
                 order.Pagamento = new Application.DTOs.Output.Pagamento
                 {
                     TipoPagamento = (TipoPagamento)payment.tipo_pagamento_id,
-                    StatusPagamento = payment.status_pagamento_id != null ? (StatusPagamento)payment.status_pagamento_id : null
+                    StatusPagamento = payment.status_pagamento_id != null ? (PagamentoStatus)payment.status_pagamento_id : null
                 };
             }
 
             return order;
+        }
+
+        public Application.DTOs.Output.PedidoPagamento GetPaymentStatus(int pedidoId)
+        {
+            string query = "select pedido_id,pagamento_status_id as status_pagamento from pedido_pagamento where pedido_id = @pedido_id";
+            return Database.Connection().QueryFirstOrDefault<Application.DTOs.Output.PedidoPagamento>(query, new { pedido_id = pedidoId });
         }
 
         public IEnumerable<Application.DTOs.Output.Pedido> List()
@@ -53,7 +59,7 @@ namespace Infrastructure.Persistence.Repositories
                 order.Pagamento = new Application.DTOs.Output.Pagamento
                 {
                     TipoPagamento = (TipoPagamento)payment.tipo_pagamento_id,
-                    StatusPagamento = payment.status_pagamento_id != null ? (StatusPagamento)payment.status_pagamento_id : null
+                    StatusPagamento = payment.status_pagamento_id != null ? (PagamentoStatus)payment.status_pagamento_id : null
                 };
             });
 
@@ -89,14 +95,14 @@ namespace Infrastructure.Persistence.Repositories
                 order.Pagamento = new Application.DTOs.Output.Pagamento
                 {
                     TipoPagamento = (TipoPagamento)payment.tipo_pagamento_id,
-                    StatusPagamento = payment.status_pagamento_id != null ? (StatusPagamento)payment.status_pagamento_id : null
+                    StatusPagamento = payment.status_pagamento_id != null ? (PagamentoStatus)payment.status_pagamento_id : null
                 };
             });
 
             return orders;
         }
 
-        public bool Order(Domain.Entities.Pedido pedido)
+        public int Order(Domain.Entities.Pedido pedido)
         {
             string queryOrder = @"insert into pedido 
                                 (cliente_id,anonimo,anonimo_identificador,pedido_status_id,valor,cliente_observacao,data) 
@@ -108,7 +114,7 @@ namespace Infrastructure.Persistence.Repositories
                                     values 
                                     (@pedido_id,@produto_id,@preco_unitario,@quantidade)";
 
-            string queryPaymentInsert = "insert into pedido_pagamento (pedido_id,tipo_pagamento_id,status,valor,codigo_transacao,status_pagamento_id) values (@pedido_id,@tipo_pagamento_id,@status,@valor,@codigo_transacao,@status_pagamento_id)";
+            string queryPaymentInsert = "insert into pedido_pagamento (pedido_id,tipo_pagamento_id,valor,codigo_transacao,pagamento_status_id) values (@pedido_id,@tipo_pagamento_id,@valor,@codigo_transacao,@pagamento_status_id)";
 
             using (var connection = Database.Connection())
             {
@@ -140,26 +146,37 @@ namespace Infrastructure.Persistence.Repositories
                     {
                         pedido_id = id,
                         tipo_pagamento_id = pedido.Pagamento.TipoPagamentoId,
-                        status = pedido.Pagamento.StatusPagamentoId,
                         valor = pedido.Pagamento.Valor,
                         codigo_transacao = pedido.Pagamento.CodigoTransacao,
-                        status_pagamento_id = pedido.Pagamento.StatusPagamentoId
+                        pagamento_status_id = pedido.Pagamento.PagamentoStatus
                     });
 
                     transaction.Commit();
                     connection.Close();
-                    return true;
+                    return id;
                 }
             }
         }
 
-        public bool UpdateOrderStatus(int id, Domain.Enums.PedidoStatus status)
+        public bool UpdateOrderStatus(int pedidoId, Domain.Enums.PedidoStatus status)
         {
             string query = "update pedido set pedido_status_id = @pedido_status_id where id = @id";
             int affected = Database.Connection().Execute(query, new
             {
-                id = id,
+                id = pedidoId,
                 pedido_status_id = status
+            });
+
+            return affected > 0;
+        }
+
+        public bool UpdatePaymentStatus(int pedidoId, Domain.Enums.PagamentoStatus status)
+        {
+            string query = "update pedido_pagamento set pagamento_status_id = @pagamento_status_id where pedido_id = @id";
+            int affected = Database.Connection().Execute(query, new
+            {
+                id = pedidoId,
+                pagamento_status_id = status
             });
 
             return affected > 0;

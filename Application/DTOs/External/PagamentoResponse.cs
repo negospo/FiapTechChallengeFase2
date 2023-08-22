@@ -3,6 +3,6 @@
     public class PagamentoResponse
     {
         public string CodigoTransacao { get; set; }
-        public Enums.StatusPagamento Status { get; set; }
+        public Domain.Enums.PagamentoStatus Status { get; set; }
     }
 }
