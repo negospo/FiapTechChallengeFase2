@@ -16,6 +16,7 @@ namespace Application.DTOs.Imput
         /// <summary>
         /// Itens do pedido
         /// </summary>
+        [Required]
         public IEnumerable<DTOs.Imput.PedidoItem> Itens { get; set; }
 
         /// <summary>

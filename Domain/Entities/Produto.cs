@@ -12,6 +12,17 @@ namespace Domain.Entities
             ProdutoCategoriaId = produtoCategoriaId;
             Preco = preco;
             Imagem = imagem;
+
+            this.Validate();
+        }
+
+        public void Validate()
+        {
+            if (string.IsNullOrEmpty(this.Nome))
+                throw new CustomExceptions.BadRequestException("Nome não pode ser vazio");
+
+            if (this.Preco == 0)
+                throw new CustomExceptions.BadRequestException("Preço deve ser maior do que zero");
         }
 
         public Produto() { }

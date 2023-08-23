@@ -21,6 +21,7 @@ namespace API.Controllers
         /// <response code="404" >Pedido não encontrado</response>
         [HttpDelete]
         [Route("{id}")]
+        [ProducesResponseType(typeof(bool), 200)]
         public ActionResult<bool> Delete(int id)
         {
             try
@@ -94,9 +95,9 @@ namespace API.Controllers
         [HttpPost]
         [Route("create")]
         [CustonValidateModel]
-        [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 422)]
+        [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 400)]
         [ProducesResponseType(typeof(Application.DTOs.Output.Cliente), 200)]
-        public ActionResult<Application.DTOs.Output.Cliente> Create(Application.DTOs.Imput.Cliente cliente)
+        public ActionResult<Application.DTOs.Output.Cliente> Create(Application.DTOs.Imput.ClienteInsert cliente)
         {
             try
             {
@@ -117,9 +118,9 @@ namespace API.Controllers
         [HttpPost]
         [Route("update")]
         [CustonValidateModel]
-        [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 422)]
+        [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 400)]
         [ProducesResponseType(typeof(Application.DTOs.Output.Cliente), 200)]
-        public ActionResult<bool> Update(Application.DTOs.Imput.Cliente cliente)
+        public ActionResult<bool> Update(Application.DTOs.Imput.ClienteUpdate cliente)
         {
             try
             {

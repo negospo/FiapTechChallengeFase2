@@ -8,6 +8,20 @@
             Nome = nome;
             Email = email;
             Cpf = cpf;
+
+            this.Validate();
+        }
+
+        public void Validate()
+        {
+            if (string.IsNullOrEmpty(this.Nome))
+                throw new CustomExceptions.BadRequestException("Nome não pode ser vazio");
+
+            if (!Validator.Helper.ValidateEmail(this.Email))
+                throw new CustomExceptions.BadRequestException("Email inválido");
+
+            if (!Validator.Helper.ValidateCPF(this.Cpf))
+                throw new CustomExceptions.BadRequestException("CPF inválido");
         }
 
         public Cliente() { }

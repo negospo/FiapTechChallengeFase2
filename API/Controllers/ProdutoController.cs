@@ -86,7 +86,7 @@ namespace API.Controllers
         [HttpPost]
         [Route("create")]
         [CustonValidateModel]
-        [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 422)]
+        [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 400)]
         [ProducesResponseType(typeof(Application.DTOs.Output.Produto), 200)]
         public ActionResult<Application.DTOs.Output.Produto> Create(Application.DTOs.Imput.Produto produto)
         {
@@ -108,7 +108,7 @@ namespace API.Controllers
         [HttpPost]
         [Route("update")]
         [CustonValidateModel]
-        [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 422)]
+        [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 400)]
         [ProducesResponseType(typeof(Application.DTOs.Output.Produto), 200)]
         public ActionResult<Application.DTOs.Output.Produto> Update(Application.DTOs.Imput.Produto cliente)
         {

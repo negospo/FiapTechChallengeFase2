@@ -46,7 +46,7 @@ namespace API.Controllers
         [HttpPost]
         [Route("order")]
         [CustonValidateModel]
-        [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 422)]
+        [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 400)]
         public ActionResult<Application.DTOs.Output.PedidoIdentificador> CreateOrder(Application.DTOs.Imput.Pedido pedido)
         {
             try
@@ -76,7 +76,7 @@ namespace API.Controllers
         {
             try
             {
-                return _pedidoUseCase.UpdateOrderStatus(id, status.Status);
+                return _pedidoUseCase.UpdateOrderStatus(id, status.Status.Value);
             }
             catch (Application.CustomExceptions.NotFoundException ex)
             {

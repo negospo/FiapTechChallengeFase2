@@ -6,6 +6,6 @@ namespace Application.DTOs.Imput
     public class PedidoStatusUpdate
     {
         [Required]
-        public Enums.PedidoStatus Status { get; set; }
+        public Enums.PedidoStatus? Status { get; set; }
     }
 }

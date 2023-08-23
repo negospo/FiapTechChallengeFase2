@@ -59,7 +59,7 @@
             });
         }
 
-        public DTOs.Output.Cliente Insert(DTOs.Imput.Cliente cliente)
+        public DTOs.Output.Cliente Insert(DTOs.Imput.ClienteInsert cliente)
         {
             var existsByCpf = this._clienteRepository.GetByCpf(cliente.Cpf);
             if (existsByCpf != null)
@@ -70,13 +70,13 @@
                 throw new CustomExceptions.ConflictException("Ja existe outro usuário com esse email");
             
            
-            var entity = new Domain.Entities.Cliente(cliente.Id, cliente.Nome, cliente.Email, cliente.Cpf);
+            var entity = new Domain.Entities.Cliente(null, cliente.Nome, cliente.Email, cliente.Cpf);
             
             var id = this._clienteRepository.Insert(entity);
             return this.Get(id);
         }
 
-        public DTOs.Output.Cliente Update(DTOs.Imput.Cliente cliente)
+        public DTOs.Output.Cliente Update(DTOs.Imput.ClienteUpdate cliente)
         {
             if (!cliente.Id.HasValue)
                 throw new CustomExceptions.ConflictException("Id do cliente está vazio");
