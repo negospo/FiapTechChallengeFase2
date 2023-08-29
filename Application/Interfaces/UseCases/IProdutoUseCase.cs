@@ -6,7 +6,7 @@
         public IEnumerable<DTOs.Output.Produto> List();
         public IEnumerable<DTOs.Output.Produto> ListByCategory(Enums.ProdutoCategoria categoria);
         public bool Delete(int id);
-        public DTOs.Output.Produto Insert(DTOs.Imput.Produto produto);
-        public DTOs.Output.Produto Update(DTOs.Imput.Produto produto);
+        public DTOs.Output.Produto Insert(DTOs.Imput.ProdutoInsert produto);
+        public DTOs.Output.Produto Update(DTOs.Imput.ProdutoUpdate produto);
     }
 }

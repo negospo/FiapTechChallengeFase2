@@ -8,7 +8,7 @@
         public string ClienteNome { get; set; }
         public bool Anonimo { get; set; }
         public string? AnonimoIdentificador { get; set; }
-        public Enums.PedidoStatus PedidoStatus { get; set; }
+        public string PedidoStatus { get; set; }
         public decimal Valor { get; set; }
         public string ClienteObservacao { get; set; }
         public IEnumerable<DTOs.Output.PedidoItem> Itens { get; set; }

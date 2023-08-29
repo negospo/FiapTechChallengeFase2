@@ -16,7 +16,7 @@ namespace API.Controllers
         }
 
         /// <summary>
-        /// Lista todos os pedidos
+        /// Lista todos os pedidos ordenados em Pronto > Em Preparação > Recebido e Data do Pedido. Pedidos Finalizados não são exibidos neste end-point
         /// </summary>
         [HttpGet]
         [Route("list")]
@@ -72,11 +72,11 @@ namespace API.Controllers
         /// <response code="404" >Pedido não encontrado</response>
         [HttpPost]
         [Route("{id}/status/update")]
-        public ActionResult<bool> UpdateOrderStatus(int id, Application.DTOs.Imput.PedidoStatusUpdate status)
+        public ActionResult<bool> UpdateOrderStatus(int id, Application.Enums.PedidoStatus status)
         {
             try
             {
-                return _pedidoUseCase.UpdateOrderStatus(id, status.Status.Value);
+                return _pedidoUseCase.UpdateOrderStatus(id, status);
             }
             catch (Application.CustomExceptions.NotFoundException ex)
             {

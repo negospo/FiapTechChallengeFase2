@@ -7,9 +7,12 @@ namespace Infrastructure.Persistence.Repositories
     {
         public Application.DTOs.Output.Pedido Get(int id)
         {
-            string queryOrder = "select * from pedido where id = @id";
-            string queryOrderItem = "select * from pedido_item where pedido_id = @pedido_id";
-            string queryPaymnet = "select tipo_pagamento_id,status_pagamento_id from pedido_pagamento where pedido_id = @pedido_id";
+            string queryOrder = "select a.*,b.nome as pedido_status  from pedido a inner join pedido_status b on b.id = a.pedido_status_id where a.id = @id";
+            string queryOrderItem = @"select a.pedido_id,a.produto_id,a.preco_unitario,a.quantidade,b.nome as nome_produto from pedido_item a
+            inner join produto b on b.id = a.produto_id  
+            where pedido_id = @produto_id";
+
+            string queryPaymnet = "select tipo_pagamento_id,pagamento_status_id from pedido_pagamento where pedido_id = @pedido_id";
 
             var order = Database.Connection().QueryFirstOrDefault<Application.DTOs.Output.Pedido>(queryOrder, new { id = id });
             if (order == null)
@@ -24,7 +27,7 @@ namespace Infrastructure.Persistence.Repositories
                 order.Pagamento = new Application.DTOs.Output.Pagamento
                 {
                     TipoPagamento = (TipoPagamento)payment.tipo_pagamento_id,
-                    StatusPagamento = payment.status_pagamento_id != null ? (PagamentoStatus)payment.status_pagamento_id : null
+                    StatusPagamento = payment.pagamento_status_id != null ? (PagamentoStatus)payment.pagamento_status_id : null
                 };
             }
 
@@ -39,13 +42,24 @@ namespace Infrastructure.Persistence.Repositories
 
         public IEnumerable<Application.DTOs.Output.Pedido> List()
         {
-            string queryOrder = "select * from pedido";
-            string queryOrderItem = "select * from pedido_item";
-            string queryPaymnet = "select pedido_id, tipo_pagamento_id,status_pagamento_id from pedido_pagamento";
+            string queryOrder = "select a.*,b.nome as pedido_status  from pedido a inner join pedido_status b on b.id = a.pedido_status_id where pedido_status_id <> 4 order by pedido_status_id desc, data";
+            
+            string queryOrderItem = @"select a.pedido_id,a.produto_id,a.preco_unitario,a.quantidade,b.nome as nome_produto from pedido_item a
+            inner join produto b on b.id = a.produto_id  
+            where pedido_id = any(@ids)";
+
+            string queryPaymnet = "select pedido_id, tipo_pagamento_id,pagamento_status_id from pedido_pagamento where pedido_id = any(@ids)";
 
             var orders = Database.Connection().Query<Application.DTOs.Output.Pedido>(queryOrder);
-            var orderItems = Database.Connection().Query<Application.DTOs.Output.PedidoItem>(queryOrderItem);
-            var payments = Database.Connection().Query(queryPaymnet);
+            var orderItems = Database.Connection().Query<Application.DTOs.Output.PedidoItem>(queryOrderItem, new
+            {
+                ids = orders.Select(s => s.Id).ToList()
+            });
+
+            var payments = Database.Connection().Query(queryPaymnet, new
+            {
+                ids = orders.Select(s => s.Id).ToList()
+            });
 
 
             orders.ToList().ForEach(order =>
@@ -59,7 +73,7 @@ namespace Infrastructure.Persistence.Repositories
                 order.Pagamento = new Application.DTOs.Output.Pagamento
                 {
                     TipoPagamento = (TipoPagamento)payment.tipo_pagamento_id,
-                    StatusPagamento = payment.status_pagamento_id != null ? (PagamentoStatus)payment.status_pagamento_id : null
+                    StatusPagamento = payment.pagamento_status_id != null ? (PagamentoStatus)payment.pagamento_status_id : null
                 };
             });
 
@@ -68,9 +82,13 @@ namespace Infrastructure.Persistence.Repositories
 
         public IEnumerable<Application.DTOs.Output.Pedido> ListByStatus(Domain.Enums.PedidoStatus status)
         {
-            string queryOrder = "select * from pedido where pedido_status_id = @pedido_status_id";
-            string queryOrderItem = "select * from pedido_item where pedido_id = any(@ids)";
-            string queryPaymnet = "select pedido_id, tipo_pagamento_id,status_pagamento_id from pedido_pagamento where pedido_id = any(@ids)";
+            string queryOrder = "select a.*,b.nome as pedido_status  from pedido a inner join pedido_status b on b.id = a.pedido_status_id where pedido_status_id = @pedido_status_id";
+            
+            string queryOrderItem = @"select a.pedido_id,a.produto_id,a.preco_unitario,a.quantidade,b.nome as nome_produto from pedido_item a
+            inner join produto b on b.id = a.produto_id  
+            where pedido_id = any(@ids)";
+
+            string queryPaymnet = "select pedido_id, tipo_pagamento_id,pagamento_status_id from pedido_pagamento where pedido_id = any(@ids)";
 
             var orders = Database.Connection().Query<Application.DTOs.Output.Pedido>(queryOrder, new { pedido_status_id = status });
             var orderItems = Database.Connection().Query<Application.DTOs.Output.PedidoItem>(queryOrderItem, new
@@ -95,7 +113,7 @@ namespace Infrastructure.Persistence.Repositories
                 order.Pagamento = new Application.DTOs.Output.Pagamento
                 {
                     TipoPagamento = (TipoPagamento)payment.tipo_pagamento_id,
-                    StatusPagamento = payment.status_pagamento_id != null ? (PagamentoStatus)payment.status_pagamento_id : null
+                    StatusPagamento = payment.pagamento_status_id != null ? (PagamentoStatus)payment.pagamento_status_id : null
                 };
             });
 

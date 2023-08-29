@@ -88,7 +88,7 @@ namespace API.Controllers
         [CustonValidateModel]
         [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 400)]
         [ProducesResponseType(typeof(Application.DTOs.Output.Produto), 200)]
-        public ActionResult<Application.DTOs.Output.Produto> Create(Application.DTOs.Imput.Produto produto)
+        public ActionResult<Application.DTOs.Output.Produto> Create(Application.DTOs.Imput.ProdutoInsert produto)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace API.Controllers
         [CustonValidateModel]
         [ProducesResponseType(typeof(Validation.CustonValidationResultModel), 400)]
         [ProducesResponseType(typeof(Application.DTOs.Output.Produto), 200)]
-        public ActionResult<Application.DTOs.Output.Produto> Update(Application.DTOs.Imput.Produto cliente)
+        public ActionResult<Application.DTOs.Output.Produto> Update(Application.DTOs.Imput.ProdutoUpdate cliente)
         {
             try
             {

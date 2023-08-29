@@ -25,6 +25,6 @@ namespace Infrastructure.Payment.MercadoPago.Model
     public class WebhookNotificationData
     {
         [Required]
-        public int? id { get; set; }
+        public int? pedido_id { get; set; }
     }
 }

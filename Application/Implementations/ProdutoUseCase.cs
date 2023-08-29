@@ -51,14 +51,14 @@ namespace Application.Implementations
             });
         }
 
-        public DTOs.Output.Produto Insert(DTOs.Imput.Produto produto)
+        public DTOs.Output.Produto Insert(DTOs.Imput.ProdutoInsert produto)
         {
-            var entity = new Domain.Entities.Produto(produto.Id, produto.Nome, produto.Descricao, (Domain.Enums.ProdutoCategoria)produto.ProdutoCategoriaId, produto.Preco, produto.Imagem);
+            var entity = new Domain.Entities.Produto(null, produto.Nome, produto.Descricao, (Domain.Enums.ProdutoCategoria)produto.ProdutoCategoriaId, produto.Preco, produto.Imagem);
             var id = this._produtoRepository.Insert(entity);
             return this.Get(id);
         }
 
-        public DTOs.Output.Produto Update(DTOs.Imput.Produto produto)
+        public DTOs.Output.Produto Update(DTOs.Imput.ProdutoUpdate produto)
         {
             if (!produto.Id.HasValue)
                 throw new CustomExceptions.ConflictException("Id do produto está vazio");

@@ -3,8 +3,9 @@
 
 namespace Application.DTOs.Imput
 {
-    public class Produto
+    public class ProdutoUpdate
     {
+        [Required]
         public int? Id { get; set; }
         [Required]
         [MaxLength(150)]

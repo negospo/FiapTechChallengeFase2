@@ -32,7 +32,7 @@ namespace API.Controllers
                 var payment = new Infrastructure.Payment.MercadoPago.MercadoPagoUseCase().GetPaymentStatus(notification);
                 if (payment.HasValue)
                 {
-                    return Ok(_pedidoUseCase.UpdatePaymentStatus(notification.data.id.Value, (Application.Enums.PagamentoStatus)payment.Value));
+                    return Ok(_pedidoUseCase.UpdatePaymentStatus(notification.data.pedido_id.Value, (Application.Enums.PagamentoStatus)payment.Value));
                 }
                 else
                 {
