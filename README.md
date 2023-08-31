@@ -67,7 +67,7 @@ Isso irá baixar o repositório para a pasta `FiapTechChallengeFase2` em seu dir
 Após a inicialização dos pods, você poderá acessar a aplicação.
 
 - Caso você esteja utilizando **Docker Desktop**:  
-  Acesse a aplicação em localhost:31300.
+  Acesse a aplicação em 127.0.0.1 ou localhost (A API e o Database podem levar até 2 minuto para ficarem disponíveis após o kubectl apply)
 
 - Caso você esteja utilizando **minikube**:  
   Acesse a aplicação com o comando: `minikube service app-service`
